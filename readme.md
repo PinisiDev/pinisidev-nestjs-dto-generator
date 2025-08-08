@@ -52,6 +52,15 @@ Perintah ini akan menjalankan generator dan menganalisis semua file `*.entity.ts
 
 ---
 
+kemudian tambahkan config di root project kalian
+**`.dtogenrc.json`**
+
+```json
+{
+  "suffixes": [".entity", ".schema", ".model", ".data"]
+}
+```
+
 ## Panduan Penggunaan
 
 Penggunaan generator ini sangat mudah dan hanya terdiri dari dua langkah.
