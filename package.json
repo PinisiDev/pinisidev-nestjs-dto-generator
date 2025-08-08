@@ -1,6 +1,6 @@
 {
   "name": "pinisidev-nestjs-dto-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A powerful DTO generator for NestJS entities.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,6 +24,7 @@
   "author": "pinisidev <sevendifferenthero@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "cosmiconfig": "^9.0.0",
     "glob": "^11.0.3",
     "ts-morph": "^26.0.0",
     "yargs": "^18.0.0"

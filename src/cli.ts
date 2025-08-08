@@ -3,6 +3,7 @@
 import { Project, ClassDeclaration, PropertyDeclaration } from "ts-morph";
 import * as path from "path";
 import * as fs from "fs";
+import { cosmiconfig } from "cosmiconfig";
 
 // Fungsi utama yang membungkus semua logika
 async function run() {
@@ -24,19 +25,34 @@ async function run() {
   const projectPath = path.resolve(process.cwd(), argv.path);
   console.log(`Menganalisis proyek di: ${projectPath}`);
 
+  const explorer = cosmiconfig("dtogen");
+  const result = await explorer.search(); // Cari file dari direktori saat ini ke atas
+
+  // Tentukan akhiran file yang akan digunakan
+  // Gunakan dari file config jika ada, jika tidak, gunakan default
+  const defaultSuffixes = [".entity", ".schema", ".model"];
+  const suffixesToUse = result?.config?.suffixes || defaultSuffixes;
+
+  console.log(`Menggunakan akhiran file: ${suffixesToUse.join(", ")}`);
+
+  // Bangun pola glob secara dinamis dari array suffixes
+  const globPattern = `/**/*{${suffixesToUse.join(",")}}.ts`;
+
   // Inisialisasi ts-morph
   const project = new Project();
-  project.addSourceFilesAtPaths(`${projectPath}/src/**/*.entity.ts`);
+  project.addSourceFilesAtPaths(`${projectPath}${globPattern}`); // <-- Gunakan pola dinamis
 
   const sourceFiles = project.getSourceFiles();
 
   if (sourceFiles.length === 0) {
     console.log(
-      "Tidak ada file *.entity.ts yang ditemukan. Pastikan file entity Anda sudah ada."
+      `Tidak ada file yang cocok dengan pola *{${suffixesToUse.join(
+        ","
+      )}}.ts yang ditemukan.`
     );
     return;
   }
-  console.log(`Menemukan ${sourceFiles.length} file entity.`);
+  console.log(`Menemukan ${sourceFiles.length} file sumber.`);
 
   for (const sourceFile of sourceFiles) {
     // Cari class yang memiliki decorator @GenerateDto()
@@ -55,7 +71,6 @@ async function run() {
 }
 
 // --- FUNGSI-FUNGSI HELPER ---
-// (Tidak ada perubahan di sini, hanya dipindahkan agar rapi)
 
 async function generateDtosForClass(
   classDeclaration: ClassDeclaration,
