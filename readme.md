@@ -25,8 +25,6 @@ Install package menggunakan npm atau yarn:
 npm install your-package-name --save-dev
 ```
 
-````
-
 atau
 
 ```bash
@@ -177,8 +175,3 @@ Decorator level properti untuk kontrol yang lebih mendalam.
 ## Lisensi
 
 Didistribusikan di bawah Lisensi MIT. Lihat `LICENSE` untuk informasi lebih lanjut.
-
-```
-
-```
-````
