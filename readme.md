@@ -22,13 +22,13 @@ Generator ini secara cerdas akan membuat DTO untuk operasi `Create`, `Update` (d
 Install package menggunakan npm atau yarn:
 
 ```bash
-npm install your-package-name --save-dev
+npm install pinisidev-nestjs-dto-generator --save-dev
 ```
 
 atau
 
 ```bash
-yarn add your-package-name --dev
+yarn add pinisidev-nestjs-dto-generator --dev
 ```
 
 > **Catatan:** Disarankan untuk menginstalnya sebagai _dev dependency_ karena ini adalah tool untuk development.

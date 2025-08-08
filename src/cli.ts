@@ -7,11 +7,9 @@ import { cosmiconfig } from "cosmiconfig";
 
 // Fungsi utama yang membungkus semua logika
 async function run() {
-  // 1. Impor yargs secara dinamis di dalam fungsi async
   const { default: yargs } = await import("yargs");
   const { hideBin } = await import("yargs/helpers");
 
-  // 2. Setup Yargs untuk argumen CLI
   const argv = await yargs(hideBin(process.argv))
     .option("path", {
       alias: "p",
@@ -26,16 +24,11 @@ async function run() {
   console.log(`Menganalisis proyek di: ${projectPath}`);
 
   const explorer = cosmiconfig("dtogen");
-  const result = await explorer.search(); // Cari file dari direktori saat ini ke atas
+  const result = await explorer.search();
 
-  // Tentukan akhiran file yang akan digunakan
-  // Gunakan dari file config jika ada, jika tidak, gunakan default
   const defaultSuffixes = [".entity", ".schema", ".model"];
   const suffixesToUse = result?.config?.suffixes || defaultSuffixes;
-
   console.log(`Menggunakan akhiran file: ${suffixesToUse.join(", ")}`);
-
-  // Bangun pola glob secara dinamis dari array suffixes
   const globPattern = `/**/*{${suffixesToUse.join(",")}}.ts`;
 
   // Inisialisasi ts-morph
@@ -55,7 +48,6 @@ async function run() {
   console.log(`Menemukan ${sourceFiles.length} file sumber.`);
 
   for (const sourceFile of sourceFiles) {
-    // Cari class yang memiliki decorator @GenerateDto()
     const classWithDecorator = sourceFile
       .getClasses()
       .find((c) => c.getDecorator("GenerateDto") !== undefined);
@@ -80,7 +72,6 @@ async function generateDtosForClass(
   const modulePath = path.dirname(
     classDeclaration.getSourceFile().getFilePath()
   );
-  // Asumsi struktur folder: src/modules/{moduleName}/entities/{entityName}.entity.ts
   const dtoPath = path.join(modulePath, "..", "dto");
 
   if (!fs.existsSync(dtoPath)) {
@@ -245,7 +236,6 @@ function getPropertyValidation(prop: PropertyDeclaration): string {
   }
 
   if (validators.length === 1 && validators[0] === "@IsOptional()") {
-    // Jangan tambahkan @IsOptional() jika tidak ada validator lain
     const nonValidationTypes = ["string", "number", "boolean", "Date"];
     if (!nonValidationTypes.includes(type)) return "";
   }
